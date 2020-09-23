@@ -1,0 +1,3 @@
+---
+- import_tasks: install-hashicorp-vault.yml
+#- import_tasks: uninstall-hashicorp-vault.yml

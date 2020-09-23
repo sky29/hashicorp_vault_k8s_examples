@@ -1,0 +1,23 @@
+---
+- name: Create vault namespace
+  k8s:
+    api_version: v1
+    kind: Namespace
+    name: vault
+    state: present
+
+- name: Add vault chart repo
+  community.kubernetes.helm_repository:
+    name: hashicorp
+    repo_url: "https://helm.releases.hashicorp.com"
+    state: present
+
+- name: Deploy specific version of Hashicorp Vault chart inside vault namespace with values
+  community.kubernetes.helm:
+    name: vault
+    chart_ref: hashicorp/vault
+    chart_version: 0.7.0
+    release_namespace: vault
+    release_values: "{{ lookup('file', 'vault-values.yml') | from_yaml }}"
+    state: present
+    wait: true

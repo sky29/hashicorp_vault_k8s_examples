@@ -1,0 +1,30 @@
+---
+- name: Create rabbitmq namespace
+  k8s:
+    api_version: v1
+    kind: Namespace
+    name: rabbitmq
+    state: present
+
+- name: Add bitnami chart repo
+  community.kubernetes.helm_repository:
+    name: bitnami
+    repo_url: "https://charts.bitnami.com/bitnami"
+    state: present
+
+- name: Return rabbitmq secret from a path
+  set_fact:
+    result: "{{ lookup('hashi_vault', 'secret=secret/data/rabbitmq:data token=root url=http://localhost:8200') }}"
+
+- name: Deploy specific version of Bitnami Rabbitmq chart inside rabbitmq namespace with values
+  community.kubernetes.helm:
+    name: rabbitmq
+    chart_ref: bitnami/rabbitmq
+    chart_version: 7.6.5
+    release_namespace: rabbitmq
+    release_values: "{{ lookup('file', 'rabbitmq-values.yml') | from_yaml }}"
+    values: 
+      auth:
+        password: "{{ result.password }}"
+    state: present
+    wait: true

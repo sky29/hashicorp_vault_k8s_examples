@@ -1,0 +1,3 @@
+---
+- import_tasks: install-bitnami-rabbitmq.yml
+#- import_tasks: uninstall-bitnami-rabbitmq.yml

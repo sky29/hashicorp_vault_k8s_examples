@@ -1,0 +1,8 @@
+---
+- name:  Deploying various ansible playbooks
+  hosts: localhost
+  connection: localhost
+  gather_facts: no
+  roles:
+    #- hashicorp-vault-setup
+    - bitnami-rabbitmq
